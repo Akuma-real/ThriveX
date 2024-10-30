@@ -17,7 +17,7 @@ services:
 
   # 后端服务
   service:
-    image: ghcr.io/${GITHUB_REPOSITORY}/service:latest
+    image: ghcr.io/${GITHUB_REPOSITORY,,}/service:latest
     container_name: thrivex-service
     environment:
       - SPRING_PROFILES_ACTIVE=pro
@@ -38,7 +38,7 @@ services:
 
   # 前端博客
   blog:
-    image: ghcr.io/${GITHUB_REPOSITORY}/blog:latest
+    image: ghcr.io/${GITHUB_REPOSITORY,,}/blog:latest
     container_name: thrivex-blog
     environment:
       - GAODE_KEY_CODE=${GAODE_KEY_CODE}
@@ -52,7 +52,7 @@ services:
 
   # 管理后台
   admin:
-    image: ghcr.io/${GITHUB_REPOSITORY}/admin:latest
+    image: ghcr.io/${GITHUB_REPOSITORY,,}/admin:latest
     container_name: thrivex-admin
     ports:
       - "9002:9002"
