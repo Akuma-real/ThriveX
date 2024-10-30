@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  # MySQL服务
+  mysql:
+    image: mysql:8.0
+    container_name: thrivex-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - thrivex-network
+
+  # 后端服务
+  service:
+    build: 
+      context: ./Service
+      dockerfile: Dockerfile
+    container_name: thrivex-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=pro
+      - LYY_EMAIL_HOST=${EMAIL_HOST}
+      - LYY_EMAIL_PORT=${EMAIL_PORT}
+      - LYY_EMAIL_USERNAME=${EMAIL_USERNAME}
+      - LYY_EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - LYY_OSS_ACCESS_KEY=${OSS_ACCESS_KEY}
+      - LYY_OSS_SECRET_KEY=${OSS_SECRET_KEY}
+      - LYY_OSS_BUCKET=${OSS_BUCKET}
+      - LYY_CORS_DOMAIN_WHITELIST=${CORS_DOMAIN_WHITELIST}
+    ports:
+      - "9003:9003"
+    depends_on:
+      - mysql
+    networks:
+      - thrivex-network
+
+  # 前端博客
+  blog:
+    build:
+      context: ./Blog
+      dockerfile: Dockerfile
+    container_name: thrivex-blog
+    environment:
+      - GAODE_KEY_CODE=${GAODE_KEY_CODE}
+      - GAODE_SECURITYJS_CODE=${GAODE_SECURITYJS_CODE}
+    ports:
+      - "9001:9001"
+    depends_on:
+      - service
+    networks:
+      - thrivex-network
+
+  # 管理后台
+  admin:
+    build:
+      context: ./Admin
+      dockerfile: Dockerfile
+    container_name: thrivex-admin
+    ports:
+      - "9002:9002"
+    depends_on:
+      - service
+    networks:
+      - thrivex-network
+
+networks:
+  thrivex-network:
+    driver: bridge
+
+volumes:
+  mysql_data: 
