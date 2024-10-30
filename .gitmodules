@@ -1,0 +1,6 @@
+[submodule "Blog"]
+	path = Blog
+	url = https://github.com/Akuma-real/ThriveX-Blog.git
+[submodule "Admin"]
+	path = Admin
+	url = https://github.com/Akuma-real/ThriveX-Admin.git
